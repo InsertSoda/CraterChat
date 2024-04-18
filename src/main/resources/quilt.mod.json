@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+
+  "quilt_loader": {
+    "group": "${mod_group}",
+    "id": "${mod_id}",
+    "version": "${mod_version}",
+
+    "intermediate_mappings":"net.fabricmc:intermediary",
+
+    "metadata": {
+      "name": "${mod_name}",
+      "description": "A chat and commands system for Cosmic Reach",
+      "contributors": {
+        "InsertSoda": "Author"
+      },
+      "license": "MIT",
+      "contact": {
+        "homepage": "https://insertsoda.com/",
+        "issues": "https://github.com/InsertSoda/CraterChat/issues",
+        "sources": "https://github.com/InsertSoda/CraterChat",
+        "wiki": "https://github.com/InsertSoda/CraterChat/wiki"
+      },
+
+      "icon": "assets/craterchat/icon.png"
+    },
+
+    "entrypoints": {
+      "init": "com.insertsoda.craterchat.CraterChat",
+      "craterchatplugin": "com.insertsoda.craterchat.impl.PluginImpl"
+    },
+
+    "depends": [
+      {
+        "id": "cosmicquilt",
+        "versions": "*"
+      },
+      {
+        "id": "cosmicreach",
+        "versions": "*"
+      },
+      {
+        "id": "com_mojang_brigadier",
+        "versions": "*"
+      }
+    ]
+  },
+
+  "mixin": "craterchat.mixins.json"
+}

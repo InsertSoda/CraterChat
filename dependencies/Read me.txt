@@ -1,0 +1,2 @@
+The brigadier-1.0.18.jar file is a modified version of Brigadier to be handled like a mod by the mod loader, allowing it to be loaded in and to be used by CraterChat
+The difference between this jar and a normally built jar is the fabric.mod.json in the jar, which tells the mod loader to load it in.
