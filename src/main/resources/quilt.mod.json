@@ -38,10 +38,6 @@
       {
         "id": "cosmicreach",
         "versions": "*"
-      },
-      {
-        "id": "com_mojang_brigadier",
-        "versions": "*"
       }
     ]
   },
