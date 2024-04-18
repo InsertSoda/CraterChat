@@ -6,7 +6,10 @@ I recommend using the [Multiverse Launcher](https://discord.com/channels/1198501
 Download [brigadier-1.0.18.jar](https://github.com/InsertSoda/CraterChat/raw/master/dependencies/brigadier-1.0.18.jar) and the CraterChat mod jar and put them into the mods folder. Now you can start the game.
 
 ## Reporting Issues
-Report them in the [Issue Tracker](https://www.github.com/InsertSoda/CraterChat/issues)
+Report them in the [Issue Tracker](https://github.com/InsertSoda/CraterChat/issues)
+
+## Building
+Building works like any Fabric/Quilt mod, just run the `build` gradle task
 
 ## API/Wiki
-View the API Reference/Wiki [here](https://www.github.com/InsertSoda/CraterChat/wiki)
+View the API Reference/Wiki [here](https://github.com/InsertSoda/CraterChat/wiki)
