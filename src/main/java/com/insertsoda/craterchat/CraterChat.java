@@ -6,6 +6,7 @@ import com.insertsoda.craterchat.api.v1.CommandContainer;
 import com.insertsoda.craterchat.api.v1.CommandSource;
 import com.insertsoda.craterchat.api.v1.CraterChatPlugin;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
+import com.mojang.brigadier.tree.CommandNode;
 import dev.crmodders.cosmicquilt.api.entrypoint.ModInitializer;
 import org.quiltmc.loader.api.ModContainer;
 import org.quiltmc.loader.api.QuiltLoader;
@@ -14,19 +15,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class CraterChat implements ModInitializer {
 	public static final Logger LOGGER = LoggerFactory.getLogger("CraterChat");
 
 	public static Chat Chat = new Chat();
 
-	private static final Map<String, CommandContainer> registeredCommands = new HashMap<>();
+	private static final LinkedHashMap<String, CommandContainer> registeredCommands = new LinkedHashMap<>();
 
-	public static Map<String, CommandContainer> getRegisteredCommands() {
+	public static LinkedHashMap<String, CommandContainer> getRegisteredCommands() {
 		return registeredCommands;
 	}
 
