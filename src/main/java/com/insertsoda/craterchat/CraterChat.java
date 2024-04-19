@@ -34,10 +34,11 @@ public class CraterChat implements ModInitializer {
 			for (Class<? extends Command> commandClass : plugin.getEntrypoint().register()) {
 				try {
 					Command command = commandClass.getDeclaredConstructor().newInstance();
-					LiteralArgumentBuilder<CommandSource> literalArgumentBuilder = LiteralArgumentBuilder.literal(command.getName());
+					CommandContainerImpl commandContainer = new CommandContainerImpl(command, plugin.getProvider());
+					LiteralArgumentBuilder<CommandSource> literalArgumentBuilder = LiteralArgumentBuilder.literal(commandContainer.getMetadata().getName());
 					command.register(literalArgumentBuilder);
 					Chat.getCommandDispatcher().register(literalArgumentBuilder);
-					registeredCommands.add(new CommandContainerImpl(command, plugin.getProvider()));
+					registeredCommands.add(commandContainer);
 				} catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
 					throw new RuntimeException(e);
 				}
