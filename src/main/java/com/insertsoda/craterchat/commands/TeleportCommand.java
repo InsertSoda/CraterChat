@@ -41,4 +41,9 @@ public class TeleportCommand implements Command {
     public @NotNull String getName() {
         return "teleport";
     }
+
+    @Override
+    public String getPossibleArguments(){
+        return "<x> <y> <z>";
+    }
 }

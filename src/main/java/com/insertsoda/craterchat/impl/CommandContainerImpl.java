@@ -11,7 +11,7 @@ public class CommandContainerImpl implements CommandContainer {
 
     public CommandContainerImpl(Command command, ModContainer sourceModContainer){
         this.command = command;
-        this.metadata = new CommandMetadataImpl(command.getName(), command.getDescription(), sourceModContainer);
+        this.metadata = new CommandMetadataImpl(command.getName(), command.getDescription(), sourceModContainer, command.getPossibleArguments());
     }
 
     public Command getCommand(){

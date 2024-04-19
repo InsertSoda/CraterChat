@@ -7,11 +7,13 @@ public class CommandMetadataImpl implements CommandMetadata {
     private String name;
     private String description;
     private ModContainer sourceModContainer;
+    private String possibleArguments;
 
-    public CommandMetadataImpl(String name, String description, ModContainer sourceModContainer){
+    public CommandMetadataImpl(String name, String description, ModContainer sourceModContainer, String possibleArguments){
         this.name = name;
         this.description = description;
         this.sourceModContainer = sourceModContainer;
+        this.possibleArguments = possibleArguments;
     }
 
     public String getName() {
@@ -24,5 +26,10 @@ public class CommandMetadataImpl implements CommandMetadata {
 
     public ModContainer getSourceModContainer() {
         return this.sourceModContainer;
+    }
+
+    @Override
+    public String getPossibleArguments() {
+        return this.possibleArguments;
     }
 }

@@ -8,4 +8,6 @@ public interface CommandMetadata {
     String getDescription();
 
     ModContainer getSourceModContainer();
+
+    String getPossibleArguments();
 }

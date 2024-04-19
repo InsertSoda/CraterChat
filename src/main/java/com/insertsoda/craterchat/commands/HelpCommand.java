@@ -66,7 +66,7 @@ public class HelpCommand implements Command {
         StringBuilder helpMessage = new StringBuilder("==Help ").append(" ").append(page).append("/").append(totalAmountOfPages).append(" ==");
 
         for (CommandContainer commandContainer : cachedCommands.get(page)) {
-            helpMessage.append("\n").append("/").append(commandContainer.getMetadata().getName()).append(" || ");
+            helpMessage.append("\n").append("/").append(commandContainer.getMetadata().getName()).append(" ").append(commandContainer.getMetadata().getPossibleArguments()).append(" || ");
             if(commandContainer.getMetadata().getDescription() == null){
                 helpMessage.append("No description provided");
             } else {
@@ -87,5 +87,10 @@ public class HelpCommand implements Command {
     @Override
     public @NotNull String getName() {
         return "help";
+    }
+
+    @Override
+    public String getPossibleArguments(){
+        return "<page>";
     }
 }
