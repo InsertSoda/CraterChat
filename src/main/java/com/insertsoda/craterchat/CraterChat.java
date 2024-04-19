@@ -15,16 +15,18 @@ import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class CraterChat implements ModInitializer {
 	public static final Logger LOGGER = LoggerFactory.getLogger("CraterChat");
 
 	public static Chat Chat = new Chat();
 
-	private static final List<CommandContainer> registeredCommands = new ArrayList<>();
+	private static final Map<String, CommandContainer> registeredCommands = new HashMap<>();
 
-	public static List<CommandContainer> getRegisteredCommands() {
+	public static Map<String, CommandContainer> getRegisteredCommands() {
 		return registeredCommands;
 	}
 
@@ -38,7 +40,7 @@ public class CraterChat implements ModInitializer {
 					LiteralArgumentBuilder<CommandSource> literalArgumentBuilder = LiteralArgumentBuilder.literal(commandContainer.getMetadata().getName());
 					command.register(literalArgumentBuilder);
 					Chat.getCommandDispatcher().register(literalArgumentBuilder);
-					registeredCommands.add(commandContainer);
+					registeredCommands.put(commandContainer.getMetadata().getName(), commandContainer);
 				} catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
 					throw new RuntimeException(e);
 				}

@@ -8,9 +8,9 @@ import org.jetbrains.annotations.Nullable;
 public interface Command {
     void register(LiteralArgumentBuilder<CommandSource> literalArgumentBuilder);
 
-    @Nullable
-    String getDescription();
-
     @NotNull
     String getName();
+
+    @Nullable
+    String getDescription();
 }
