@@ -3,11 +3,13 @@ package com.insertsoda.craterchat;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.insertsoda.craterchat.impl.CommandSourceImpl;
 import com.insertsoda.craterchat.api.v1.CommandSource;
+import com.insertsoda.craterchat.mixins.UITextInputAccessor;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.ParseResults;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
@@ -120,7 +122,7 @@ public class Chat {
                                 // This will only happen if a command itself causes an exception
                                 CraterChat.Chat.sendMessage(new ChatMessage("[Unknown Exception]: " + e.getMessage()));
                             }
-                        } else {
+                        } else if(!this.inputText.isEmpty()) {
                             CraterChat.Chat.sendMessage(new ChatMessage("[Player]: " + this.inputText));
                         }
 
@@ -150,8 +152,18 @@ public class Chat {
         }
 
         if(this.isOpen){
+            this.textInput.updateText();
             this.textInput.drawElementBackground(uiViewport, UI.batch);
-            String text = this.textInput.inputText;
+
+            int cursorIndex = MathUtils.clamp(((UITextInputAccessor)this.textInput).getDesiredCharIdx(), 0, this.textInput.inputText.length());
+            String cursorCharacter = " ";
+
+            long milliseconds = TimeUtils.millis();
+            if(milliseconds % 1500 > 750){
+                cursorCharacter = "|";
+            }
+
+            String text = this.textInput.inputText.substring(0, cursorIndex) + cursorCharacter + this.textInput.inputText.substring(cursorIndex);
 
             if(this.textInput.inputText.startsWith("/")){
                 if(commandSuggestions != null && commandSuggestions.isDone()){

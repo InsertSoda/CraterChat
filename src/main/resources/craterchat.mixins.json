@@ -10,7 +10,8 @@
     "InGameStateMixin",
     "UIAccessorMixin",
     "UIMixin",
-    "KeybindMixin"
+    "KeybindMixin",
+    "UITextInputAccessor"
   ],
   "injectors": {
     "defaultRequire": 1
