@@ -4,7 +4,9 @@ import com.insertsoda.craterchat.CraterChat;
 import com.insertsoda.craterchat.api.v1.Command;
 import com.insertsoda.craterchat.api.v1.CommandManager;
 import com.insertsoda.craterchat.api.v1.CommandSource;
+import com.insertsoda.craterchat.api.v1.arguments.types.RelativeFloatType;
 import com.mojang.brigadier.arguments.FloatArgumentType;
+import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import finalforeach.cosmicreach.gamestates.InGame;
 import org.jetbrains.annotations.NotNull;
@@ -13,13 +15,13 @@ public class TeleportCommand implements Command {
     @Override
     public void register(LiteralArgumentBuilder<CommandSource> literalArgumentBuilder) {
         literalArgumentBuilder.then(
-                CommandManager.argument("x", FloatArgumentType.floatArg()).then(
-                        CommandManager.argument("y", FloatArgumentType.floatArg(0, 255)).then(
-                                CommandManager.argument("z", FloatArgumentType.floatArg())
+                CommandManager.argument("x", RelativeFloatType.argument(() -> InGame.getLocalPlayer().getEntity().position.x)).then(
+                        CommandManager.argument("y", RelativeFloatType.argument(0, 255, () -> InGame.getLocalPlayer().getEntity().position.y)).then(
+                                CommandManager.argument("z", RelativeFloatType.argument(() -> InGame.getLocalPlayer().getEntity().position.z))
                                         .executes(context -> {
-                                            float x = FloatArgumentType.getFloat(context, "x");
-                                            float y = FloatArgumentType.getFloat(context, "y");
-                                            float z = FloatArgumentType.getFloat(context, "z");
+                                            float x = RelativeFloatType.getRelativeFloat(context, "x").getValue();
+                                            float y = RelativeFloatType.getRelativeFloat(context, "y").getValue();
+                                            float z = RelativeFloatType.getRelativeFloat(context, "z").getValue();
 
                                             context.getSource().getPlayer().setPosition(x,y,z);
 
