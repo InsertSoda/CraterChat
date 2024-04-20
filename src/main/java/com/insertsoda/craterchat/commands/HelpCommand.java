@@ -10,6 +10,7 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class HelpCommand implements Command {
 
@@ -38,34 +39,34 @@ public class HelpCommand implements Command {
         int currentPage = 1;
 
         //  I don't want to do page - 1 constantly to offset the index to follow stuff starting at 0 I'm doing this
-        cachedCommands.add(0, new ArrayList<>());
+        this.cachedCommands.add(0, new ArrayList<>());
         // also add an arraylist at index 1, so it doesn't cause an exception when getting index 1
-        cachedCommands.add(1, new ArrayList<>());
+        this.cachedCommands.add(1, new ArrayList<>());
 
 
         for(CommandContainer commandContainer : CraterChat.getRegisteredCommands().values()){
-            if(cachedCommands.get(currentPage).size() >= amountPerPage){
+            if(this.cachedCommands.get(currentPage).size() >= this.amountPerPage){
                 currentPage++;
-                cachedCommands.add(currentPage, new ArrayList<>());
+                this.cachedCommands.add(currentPage, new ArrayList<>());
             }
-            cachedCommands.get(currentPage).add(commandContainer);
+            this.cachedCommands.get(currentPage).add(commandContainer);
         }
 
-        totalAmountOfPages = currentPage;
+        this.totalAmountOfPages = currentPage;
     }
 
     private void handleCommand(int page){
-        if(cachedCommands.isEmpty()){
+        if(this.cachedCommands.isEmpty()){
             this.buildCommandsCache();
         }
-        if(page > totalAmountOfPages){
-            CraterChat.Chat.sendMessage("Entered page " + page + " is higher than the total amount of pages, which is " + totalAmountOfPages + "!");
+        if(page > this.totalAmountOfPages){
+            CraterChat.Chat.sendMessage("Entered page " + page + " is higher than the total amount of pages, which is " + this.totalAmountOfPages + "!");
             return;
         }
 
-        StringBuilder helpMessage = new StringBuilder("==Help ").append(" ").append(page).append("/").append(totalAmountOfPages).append(" ==");
+        StringBuilder helpMessage = new StringBuilder("==Help ").append(" ").append(page).append("/").append(this.totalAmountOfPages).append(" ==");
 
-        for (CommandContainer commandContainer : cachedCommands.get(page)) {
+        for (CommandContainer commandContainer : this.cachedCommands.get(page)) {
             helpMessage.append("\n").append("/").append(commandContainer.getMetadata().getName()).append(" ").append(commandContainer.getMetadata().getPossibleArguments()).append(" || ");
             if(commandContainer.getMetadata().getDescription() == null){
                 helpMessage.append("No description provided");
@@ -73,7 +74,9 @@ public class HelpCommand implements Command {
                 helpMessage.append(commandContainer.getMetadata().getDescription());
             }
 
-            helpMessage.append(" (Added by ").append(commandContainer.getMetadata().getSourceModContainer().metadata().name()).append(")");
+            if(!Objects.equals(commandContainer.getMetadata().getSourceModContainer().metadata().id(), "craterchat")) {
+                helpMessage.append(" (Added by ").append(commandContainer.getMetadata().getSourceModContainer().metadata().name()).append(")");
+            }
         }
 
         CraterChat.Chat.sendMessage(helpMessage.toString());

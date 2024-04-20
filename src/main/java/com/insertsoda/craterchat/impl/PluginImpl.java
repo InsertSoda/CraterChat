@@ -2,10 +2,7 @@ package com.insertsoda.craterchat.impl;
 
 import com.insertsoda.craterchat.api.v1.Command;
 import com.insertsoda.craterchat.api.v1.CraterChatPlugin;
-import com.insertsoda.craterchat.commands.ClearChatCommand;
-import com.insertsoda.craterchat.commands.HelpCommand;
-import com.insertsoda.craterchat.commands.TeleportCommand;
-import com.insertsoda.craterchat.commands.VersionCommand;
+import com.insertsoda.craterchat.commands.*;
 
 import java.util.List;
 
@@ -16,7 +13,8 @@ public class PluginImpl implements CraterChatPlugin {
                 ClearChatCommand.class,
                 HelpCommand.class,
                 TeleportCommand.class,
-                VersionCommand.class
+                VersionCommand.class,
+                PluginsCommand.class
         );
     }
 }
