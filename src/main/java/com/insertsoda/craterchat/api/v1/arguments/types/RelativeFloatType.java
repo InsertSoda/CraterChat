@@ -63,6 +63,10 @@ public class RelativeFloatType implements ArgumentType<RelativeFloat> {
 
         String string = reader.getString().substring(start, reader.getCursor());
 
+        if(string.isEmpty()){
+            throw CommandSyntaxException.BUILT_IN_EXCEPTIONS.readerExpectedFloat().createWithContext(reader);
+        }
+
         try {
             if (string.startsWith("~")) {
                 if(string.length() == 1){
