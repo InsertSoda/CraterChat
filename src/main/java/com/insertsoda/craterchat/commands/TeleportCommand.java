@@ -11,6 +11,8 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import finalforeach.cosmicreach.gamestates.InGame;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.List;
+
 public class TeleportCommand implements Command {
     @Override
     public void register(LiteralArgumentBuilder<CommandSource> literalArgumentBuilder) {
@@ -47,5 +49,10 @@ public class TeleportCommand implements Command {
     @Override
     public String getPossibleArguments(){
         return "<x> <y> <z>";
+    }
+
+    @Override
+    public List<String> getAliases(){
+        return List.of("tp");
     }
 }

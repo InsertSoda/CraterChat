@@ -10,8 +10,16 @@ public class CommandContainerImpl implements CommandContainer {
     private CommandMetadata metadata;
 
     public CommandContainerImpl(Command command, ModContainer sourceModContainer){
+        this(command, sourceModContainer, null);
+    }
+
+    public CommandContainerImpl(Command command, ModContainer sourceModContainer, String aliasName){
         this.command = command;
-        this.metadata = new CommandMetadataImpl(command.getName(), command.getDescription(), sourceModContainer, command.getPossibleArguments());
+        String name = command.getName();
+        if(aliasName != null){
+            name = aliasName;
+        }
+        this.metadata = new CommandMetadataImpl(name, command.getDescription(), sourceModContainer, command.getPossibleArguments(), command.getAliases(), true);
     }
 
     public Command getCommand(){

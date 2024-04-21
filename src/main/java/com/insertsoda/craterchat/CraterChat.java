@@ -35,10 +35,25 @@ public class CraterChat implements ModInitializer {
 				try {
 					Command command = commandClass.getDeclaredConstructor().newInstance();
 					CommandContainerImpl commandContainer = new CommandContainerImpl(command, plugin.getProvider());
-					LiteralArgumentBuilder<CommandSource> literalArgumentBuilder = LiteralArgumentBuilder.literal(commandContainer.getMetadata().getName());
-					command.register(literalArgumentBuilder);
-					Chat.getCommandDispatcher().register(literalArgumentBuilder);
-					registeredCommands.put(commandContainer.getMetadata().getName(), commandContainer);
+					if(!registeredCommands.containsKey(commandContainer.getMetadata().getName())) {
+						LiteralArgumentBuilder<CommandSource> literalArgumentBuilder = LiteralArgumentBuilder.literal(commandContainer.getMetadata().getName());
+						command.register(literalArgumentBuilder);
+						Chat.getCommandDispatcher().register(literalArgumentBuilder);
+						registeredCommands.put(commandContainer.getMetadata().getName(), commandContainer);
+
+						for (String alias : commandContainer.getMetadata().getAliases()) {
+							if(!registeredCommands.containsKey(alias)){
+								LiteralArgumentBuilder<CommandSource> aliasLiteralArgumentBuilder = LiteralArgumentBuilder.literal(alias);
+								command.register(aliasLiteralArgumentBuilder);
+								Chat.getCommandDispatcher().register(aliasLiteralArgumentBuilder);
+								registeredCommands.put(alias, new CommandContainerImpl(command, plugin.getProvider(), alias));
+							} else {
+								LOGGER.warn(commandContainer.getMetadata().getSourceModContainer().metadata().name() + " attempted to register command alias /" + commandContainer.getMetadata().getName() + ", but it was already taken by another mod!");
+							}
+						}
+					} else {
+						LOGGER.warn(commandContainer.getMetadata().getSourceModContainer().metadata().name() + " attempted to register command /" + commandContainer.getMetadata().getName() + ", but it was already taken by another mod!");
+					}
 				} catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
 					throw new RuntimeException(e);
 				}

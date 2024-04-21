@@ -5,6 +5,8 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.List;
+
 public interface Command {
     void register(LiteralArgumentBuilder<CommandSource> literalArgumentBuilder);
 
@@ -22,5 +24,12 @@ public interface Command {
      */
     default String getPossibleArguments(){
         return "";
+    }
+
+    /**
+     *  Returns a list of aliases that can be used for the command instead
+     */
+    default List<String> getAliases(){
+        return List.of();
     }
 }

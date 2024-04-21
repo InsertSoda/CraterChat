@@ -1,6 +1,9 @@
 package com.insertsoda.craterchat.api.v1;
 
+import org.jetbrains.annotations.Nullable;
 import org.quiltmc.loader.api.ModContainer;
+
+import java.util.List;
 
 public interface CommandMetadata {
     String getName();
@@ -10,4 +13,8 @@ public interface CommandMetadata {
     ModContainer getSourceModContainer();
 
     String getPossibleArguments();
+
+    List<String> getAliases();
+
+    boolean isAlias();
 }
