@@ -16,7 +16,7 @@ public class TeleportCommand implements Command {
     public void register(LiteralArgumentBuilder<CommandSource> literalArgumentBuilder) {
         literalArgumentBuilder.then(
                 CommandManager.argument("x", RelativeFloatType.argument(() -> InGame.getLocalPlayer().getEntity().position.x)).then(
-                        CommandManager.argument("y", RelativeFloatType.argument(0, 255, () -> InGame.getLocalPlayer().getEntity().position.y)).then(
+                        CommandManager.argument("y", RelativeFloatType.argument(() -> InGame.getLocalPlayer().getEntity().position.y)).then(
                                 CommandManager.argument("z", RelativeFloatType.argument(() -> InGame.getLocalPlayer().getEntity().position.z))
                                         .executes(context -> {
                                             float x = RelativeFloatType.getRelativeFloat(context, "x").getValue();
@@ -36,7 +36,7 @@ public class TeleportCommand implements Command {
 
     @Override
     public String getDescription() {
-        return "Teleports the player, y is in range of 0 - 255";
+        return "Teleports the player to the specified position";
     }
 
     @Override
