@@ -36,7 +36,7 @@ public class PluginsCommand implements Command {
     }
 
     // This is basically identical to the help command
-    public void buildPluginsCache(){
+    private void buildPluginsCache(){
         int currentPage = 1;
 
         this.cachedPlugins.add(0, new ArrayList<>());
@@ -52,6 +52,11 @@ public class PluginsCommand implements Command {
         }
 
         this.totalAmountOfPages = currentPage;
+    }
+
+    public void refreshPluginsCache(){
+        this.cachedPlugins.clear();
+        this.buildPluginsCache();
     }
 
     public void handleCommand(int page){

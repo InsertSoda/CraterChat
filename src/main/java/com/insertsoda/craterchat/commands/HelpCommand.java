@@ -55,6 +55,11 @@ public class HelpCommand implements Command {
         this.totalAmountOfPages = currentPage;
     }
 
+    public void refreshCommandsCache(){
+        this.cachedCommands.clear();
+        this.buildCommandsCache();
+    }
+
     private void handleCommand(int page){
         if(this.cachedCommands.isEmpty()){
             this.buildCommandsCache();
