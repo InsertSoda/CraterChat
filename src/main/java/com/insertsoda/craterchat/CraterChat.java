@@ -69,8 +69,10 @@ public class CraterChat implements ModInitializer {
 	}
 
 	private static void refreshCaches(){
-		((HelpCommand) registeredCommands.get("help").getCommand()).refreshCommandsCache();
-		((PluginsCommand) registeredCommands.get("plugins").getCommand()).refreshPluginsCache();
+		if(registeredCommands.containsKey("help") && registeredCommands.containsKey("plugins")) {
+			((HelpCommand) registeredCommands.get("help").getCommand()).refreshCommandsCache();
+			((PluginsCommand) registeredCommands.get("plugins").getCommand()).refreshPluginsCache();
+		}
 	}
 
 	/**
