@@ -2,6 +2,7 @@ package com.insertsoda.craterchat;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
@@ -92,6 +93,46 @@ public class Chat {
                 }
 
                 @Override
+                public boolean keyDown(int keycode) {
+                    switch (keycode) {
+                        case Keys.LEFT:
+                            if (Gdx.input.isKeyPressed(Keys.CONTROL_LEFT)) {
+                                var input = ((UITextInputAccessor)this);
+
+                                int pos = input.getDesiredCharIdx() - 1;
+                                if (pos <= 0) return true;
+
+                                // Move left until a non-alphanumeric character or the start of the input
+                                do { --pos; }
+                                while (pos > 0 && Character.isLetterOrDigit(textInput.inputText.charAt(pos)));
+
+                                input.setDesiredCharIdx(pos);
+                                input.setIsDefaultText(false);
+                                return true;
+                            }
+                            break;
+                        case Keys.RIGHT:
+                            if (Gdx.input.isKeyPressed(Keys.CONTROL_LEFT)) {
+                                var input = ((UITextInputAccessor)this);
+
+                                int pos = input.getDesiredCharIdx();
+                                if (pos >= textInput.inputText.length()) return true;
+
+                                // Move right until a non-alphanumeric character or the end of the input
+                                do { ++pos; }
+                                while (pos <= textInput.inputText.length() - 1 && Character.isLetterOrDigit(textInput.inputText.charAt(pos)));
+
+                                input.setDesiredCharIdx(pos);
+                                input.setIsDefaultText(false);
+                                return true;
+                            }
+                            break;
+                    }
+
+                    return super.keyDown(keycode);
+                }
+
+                @Override
                 public boolean keyTyped(char character) {
                     // Types in the character into the text field and stores its returning boolean for later
                     boolean keyTypedBoolean = super.keyTyped(character);
@@ -132,6 +173,33 @@ public class Chat {
                         CraterChat.Chat.toggle();
 
                         return false;
+                    }
+
+                    if (character == '\t' && commandSuggestions != null) {
+                        try {
+                            inputText = "/" + commandSuggestions.get().getList().get(0).getText();
+                            var input = ((UITextInputAccessor)this);
+                            input.setDesiredCharIdx(inputText.length());
+                            input.setIsDefaultText(false);
+                            return true;
+                        } catch (Exception e) {}
+                    }
+
+                    if (character == '\b' && Gdx.input.isKeyPressed(Keys.CONTROL_LEFT)) {
+                        var input = ((UITextInputAccessor)this);
+
+                        int pos = input.getDesiredCharIdx() - 1;
+                        if (pos <= 0) return true;
+
+                        // Move left until a non-alphanumeric character or the start of the input
+                        do { --pos; }
+                        while (pos > 0 && Character.isLetterOrDigit(textInput.inputText.charAt(pos)));
+
+                        input.setDesiredCharIdx(pos);
+                        input.setIsDefaultText(false);
+                        // The caret has already been moved, so now we can just take a substring from 0-caret to remove a whole word
+                        inputText = inputText.substring(0, input.getDesiredCharIdx());
+                        return true;
                     }
 
                     // Resume other operations I guess
