@@ -8,11 +8,13 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.insertsoda.craterchat.api.v1.CommandContainer;
 import com.insertsoda.craterchat.impl.CommandSourceImpl;
 import com.insertsoda.craterchat.api.v1.CommandSource;
 import com.insertsoda.craterchat.mixins.UITextInputAccessor;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.ParseResults;
+import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.suggestion.Suggestion;
 import com.mojang.brigadier.suggestion.Suggestions;
@@ -77,8 +79,16 @@ public class Chat {
         this.messages = new LinkedList<>();
     }
 
-    public CommandDispatcher<CommandSource> getCommandDispatcher(){
-        return this.commandDispatcher;
+    public void buildCommandDispatcher(){
+        CraterChat.LOGGER.info("Building the command dispatcher...");
+        this.commandDispatcher = new CommandDispatcher<>();
+        for(Map.Entry<String, CommandContainer> entry : CraterChat.getRegisteredCommands().entrySet()){
+            CommandContainer commandContainer = entry.getValue();
+            LiteralArgumentBuilder<CommandSource> literalArgumentBuilder = LiteralArgumentBuilder.literal(entry.getKey());
+            commandContainer.getCommand().register(literalArgumentBuilder);
+            this.commandDispatcher.register(literalArgumentBuilder);
+        }
+        CraterChat.LOGGER.info("Built the command dispatcher");
     }
 
     public void render(Viewport uiViewport, OrthographicCamera uiCamera){

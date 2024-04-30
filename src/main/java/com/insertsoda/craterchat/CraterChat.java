@@ -26,8 +26,14 @@ public class CraterChat implements ModInitializer {
 
 	private static final LinkedHashMap<String, CommandContainer> registeredCommands = new LinkedHashMap<>();
 
+	private static boolean isCraterChatInitialized = false;
+
 	public static LinkedHashMap<String, CommandContainer> getRegisteredCommands() {
 		return registeredCommands;
+	}
+
+	public static boolean isIsCraterChatInitialized() {
+		return isCraterChatInitialized;
 	}
 
 	@Override
@@ -37,17 +43,11 @@ public class CraterChat implements ModInitializer {
 				try {
 					Command command = commandClass.getDeclaredConstructor().newInstance();
 					CommandContainerImpl commandContainer = new CommandContainerImpl(command, plugin.getProvider());
-					if(!registeredCommands.containsKey(commandContainer.getMetadata().getName())) {
-						LiteralArgumentBuilder<CommandSource> literalArgumentBuilder = LiteralArgumentBuilder.literal(commandContainer.getMetadata().getName());
-						command.register(literalArgumentBuilder);
-						Chat.getCommandDispatcher().register(literalArgumentBuilder);
+					if(!registeredCommands.containsKey(commandContainer.getMetadata().getName()) || Objects.equals(plugin.getProvider().metadata().id(), "craterchat")) {
 						registeredCommands.put(commandContainer.getMetadata().getName(), commandContainer);
 
 						for (String alias : commandContainer.getMetadata().getAliases()) {
-							if(!registeredCommands.containsKey(alias)){
-								LiteralArgumentBuilder<CommandSource> aliasLiteralArgumentBuilder = LiteralArgumentBuilder.literal(alias);
-								command.register(aliasLiteralArgumentBuilder);
-								Chat.getCommandDispatcher().register(aliasLiteralArgumentBuilder);
+							if(!registeredCommands.containsKey(alias) || Objects.equals(plugin.getProvider().metadata().id(), "craterchat")){
 								registeredCommands.put(alias, new CommandContainerImpl(command, plugin.getProvider(), alias));
 							} else {
 								LOGGER.warn(commandContainer.getMetadata().getSourceModContainer().metadata().name() + " attempted to register command alias /" + commandContainer.getMetadata().getName() + ", but it was already taken by another mod!");
@@ -65,11 +65,14 @@ public class CraterChat implements ModInitializer {
 
 		}
 
+		CraterChat.Chat.buildCommandDispatcher();
+		isCraterChatInitialized = true;
+
 		LOGGER.info("CraterChat initialized");
 	}
 
 	private static void refreshCaches(){
-		if(registeredCommands.containsKey("help") && registeredCommands.containsKey("plugins")) {
+		if(isCraterChatInitialized) {
 			((HelpCommand) registeredCommands.get("help").getCommand()).refreshCommandsCache();
 			((PluginsCommand) registeredCommands.get("plugins").getCommand()).refreshPluginsCache();
 		}
@@ -90,7 +93,14 @@ public class CraterChat implements ModInitializer {
 	 */
 	@ApiStatus.Experimental
 	public static void removeCommand(String commandName){
-		registeredCommands.remove(commandName);
+		removeCommands(List.of(commandName));
+	}
+
+	public static void removeCommands(List<String> commandNames){
+		for (String commandName : commandNames) {
+			registeredCommands.remove(commandName);
+		}
+		CraterChat.Chat.buildCommandDispatcher();
 	}
 
 	/**
@@ -101,32 +111,43 @@ public class CraterChat implements ModInitializer {
 	 */
 	@ApiStatus.Experimental
 	public static boolean registerCommand(Command command, ModContainer modContainer){
-		CommandContainer commandContainer = new CommandContainerImpl(command, modContainer);
+		return registerCommands(List.of(command), modContainer);
+	}
 
-		if(!registeredCommands.containsKey(commandContainer.getMetadata().getName())) {
-			LiteralArgumentBuilder<CommandSource> literalArgumentBuilder = LiteralArgumentBuilder.literal(commandContainer.getMetadata().getName());
-			command.register(literalArgumentBuilder);
-			Chat.getCommandDispatcher().register(literalArgumentBuilder);
-			registeredCommands.put(commandContainer.getMetadata().getName(), commandContainer);
+	/**
+	 * Allows you to register multiple commands while the game is running. It isn't recommended to use this as your main way of registering commands.
+	 * @param commands The list of commands to be registered.
+	 * @param modContainer The Quilt ModContainer from which the command originates from.
+	 * @return true or false depending on whether all the commands under their respective command name were successfully registered (results from registering aliases are ignored).
+	 */
+	@ApiStatus.Experimental
+	public static boolean registerCommands(List<Command> commands, ModContainer modContainer){
 
-			for (String alias : commandContainer.getMetadata().getAliases()) {
-				if(!registeredCommands.containsKey(alias)){
-					LiteralArgumentBuilder<CommandSource> aliasLiteralArgumentBuilder = LiteralArgumentBuilder.literal(alias);
-					command.register(aliasLiteralArgumentBuilder);
-					Chat.getCommandDispatcher().register(aliasLiteralArgumentBuilder);
-					registeredCommands.put(alias, new CommandContainerImpl(command, modContainer, alias));
-				} else {
-					LOGGER.warn(commandContainer.getMetadata().getSourceModContainer().metadata().name() + " attempted to register command alias /" + commandContainer.getMetadata().getName() + ", but it was already taken by another mod!");
+		boolean allSuccessful = true;
+
+		for(Command command : commands){
+			CommandContainer commandContainer = new CommandContainerImpl(command, modContainer);
+
+			if(!registeredCommands.containsKey(commandContainer.getMetadata().getName())) {
+				registeredCommands.put(commandContainer.getMetadata().getName(), commandContainer);
+
+				for (String alias : commandContainer.getMetadata().getAliases()) {
+					if(!registeredCommands.containsKey(alias)){
+						registeredCommands.put(alias, new CommandContainerImpl(command, modContainer, alias));
+					} else {
+						LOGGER.warn(commandContainer.getMetadata().getSourceModContainer().metadata().name() + " attempted to register command alias /" + commandContainer.getMetadata().getName() + ", but it was already taken by another mod!");
+					}
 				}
+			} else {
+				LOGGER.warn(commandContainer.getMetadata().getSourceModContainer().metadata().name() + " attempted to register command /" + commandContainer.getMetadata().getName() + ", but it was already taken by another mod!");
+				allSuccessful = false;
 			}
-
-			refreshCaches();
-
-			return true;
-		} else {
-			LOGGER.warn(commandContainer.getMetadata().getSourceModContainer().metadata().name() + " attempted to register command /" + commandContainer.getMetadata().getName() + ", but it was already taken by another mod!");
-			return false;
 		}
+
+		refreshCaches();
+		CraterChat.Chat.buildCommandDispatcher();
+
+		return allSuccessful;
 	}
 }
 
