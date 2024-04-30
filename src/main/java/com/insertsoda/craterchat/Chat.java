@@ -179,7 +179,7 @@ public class Chat {
                 text += "\n" + infoString;
             }
 
-            FontRenderer.drawTextbox(UI.batch, uiViewport, "> " + text, -uiViewport.getWorldWidth() / 2.0F + 25, uiViewport.getWorldHeight() / 4.0F + lineHeight * 0.5F, uiViewport.getWorldWidth() / 3.0F);
+            FontRenderer.drawText(UI.batch, uiViewport, "> " + text, -uiViewport.getWorldWidth() / 2.0F + 25, uiViewport.getWorldHeight() / 4.0F + lineHeight * 0.5F);
 
         }
 
