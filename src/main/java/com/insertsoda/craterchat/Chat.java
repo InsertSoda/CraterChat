@@ -27,11 +27,12 @@ import finalforeach.cosmicreach.ui.UITextInput;
 
 import java.util.LinkedList;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
 public class Chat {
 
-    CommandDispatcher<CommandSource> commandDispatcher = new CommandDispatcher<>();
+    CommandDispatcher<CommandSource> commandDispatcher;
     ParseResults<CommandSource> parse;
     CompletableFuture<Suggestions> commandSuggestions = null;
     String infoString = "";
@@ -59,6 +60,24 @@ public class Chat {
                 this.textInput.deactivate();
             }
         }
+    }
+
+    public CommandSource buildCommandSource(){
+        return new CommandSourceImpl(InGame.getLocalPlayer(), InGame.world);
+    }
+
+    public CommandDispatcher<CommandSource> getCommandDispatcher(){
+        return this.commandDispatcher;
+    }
+
+    public Optional<Exception> executeCommand(String command){
+        try {
+            this.commandDispatcher.execute(command, buildCommandSource());
+        } catch (Exception e) {
+            return Optional.of(e);
+        }
+
+        return Optional.empty();
     }
 
     public void sendMessage(ChatMessage message){
@@ -149,7 +168,7 @@ public class Chat {
 
                     // Handle suggestions and command syntax errors while typing
                     if(this.inputText.startsWith("/")){
-                        parse = commandDispatcher.parse(this.inputText.substring(1), new CommandSourceImpl(InGame.getLocalPlayer(), InGame.world));
+                        parse = commandDispatcher.parse(this.inputText.substring(1), buildCommandSource());
 
                         StringBuilder infoStringBuilder = new StringBuilder();
 
