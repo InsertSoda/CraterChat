@@ -53,7 +53,7 @@ public class Chat {
             if (this.isOpen) {
                 this.textInput.onClick();
 
-                if(UI.itemCatalog.shown){
+                if(UI.itemCatalog.isShown()){
                     UI.itemCatalog.hide();
                 }
             } else {
