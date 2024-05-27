@@ -40,7 +40,7 @@ public class Chat {
     UITextInput textInput = null;
     boolean isOpen = false;
     float lineHeight = 0.0F;
-    public static Keybind chatKeybind = new Keybind("chat", Input.Keys.T);
+    public static Keybind chatKeybind = Keybind.fromDefaultKey("chat", Input.Keys.T);
 
     public boolean isOpen() {
         return isOpen;
