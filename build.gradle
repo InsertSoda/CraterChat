@@ -72,7 +72,7 @@ dependencies {
     // Cosmic Quilt
     internal "dev.crmodders:cosmicquilt:${cosmic_quilt_version}"
     // Modmenu
-    internal "dev.crmodders:modmenu:${modmenu_version}"
+    //internal "dev.crmodders:modmenu:${modmenu_version}"
 
     internal "com.mojang:brigadier:1.0.18"
 

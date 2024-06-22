@@ -14,7 +14,8 @@ public class PluginImpl implements CraterChatPlugin {
                 HelpCommand.class,
                 TeleportCommand.class,
                 VersionCommand.class,
-                PluginsCommand.class
+                PluginsCommand.class,
+                SummonCommand.class
         );
     }
 }
