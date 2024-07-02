@@ -1,16 +1,15 @@
 package com.insertsoda.craterchat.impl;
 
 import com.insertsoda.craterchat.api.v1.CommandMetadata;
-import org.jetbrains.annotations.Nullable;
 import org.quiltmc.loader.api.ModContainer;
 
 import java.util.List;
 
 public class CommandMetadataImpl implements CommandMetadata {
-    private String name;
-    private String description;
-    private ModContainer sourceModContainer;
-    private String possibleArguments;
+    private final String name;
+    private final String description;
+    private final ModContainer sourceModContainer;
+    private final String possibleArguments;
 
     private List<String> aliases;
 

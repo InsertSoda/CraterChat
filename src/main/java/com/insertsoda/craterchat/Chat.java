@@ -124,12 +124,13 @@ public class Chat {
                     super.onCreate();
                 }
 
+                @SuppressWarnings({"UnreachableCode", "DataFlowIssue"})
                 @Override
                 public boolean keyDown(int keycode) {
                     switch (keycode) {
                         case Keys.LEFT:
                             if (Gdx.input.isKeyPressed(Keys.CONTROL_LEFT)) {
-                                var input = ((UITextInputAccessor)this);
+                                var input = ((UITextInputAccessor)(Object)this);
 
                                 int pos = input.getDesiredCharIdx() - 1;
                                 if (pos <= 0) return true;
@@ -145,7 +146,7 @@ public class Chat {
                             break;
                         case Keys.RIGHT:
                             if (Gdx.input.isKeyPressed(Keys.CONTROL_LEFT)) {
-                                var input = ((UITextInputAccessor)this);
+                                var input = ((UITextInputAccessor)(Object)this);
 
                                 int pos = input.getDesiredCharIdx();
                                 if (pos >= textInput.inputText.length()) return true;
@@ -169,7 +170,7 @@ public class Chat {
                                 }
 
                                 this.inputText = pastMessages.get(pastMessageIndex);
-                                ((UITextInputAccessor)this).setDesiredCharIdx(this.inputText.length());
+                                ((UITextInputAccessor)(Object)this).setDesiredCharIdx(this.inputText.length());
                             }
                             break;
                         case Keys.DOWN:
@@ -185,7 +186,7 @@ public class Chat {
                                     this.inputText = pastMessages.get(pastMessageIndex);
                                 }
 
-                                ((UITextInputAccessor)this).setDesiredCharIdx(this.inputText.length());
+                                ((UITextInputAccessor)(Object)this).setDesiredCharIdx(this.inputText.length());
                             }
                             break;
                     }
@@ -203,6 +204,7 @@ public class Chat {
                     }
                 }
 
+                @SuppressWarnings({"UnreachableCode", "DataFlowIssue"})
                 @Override
                 public boolean keyTyped(char character) {
                     // Types in the character into the text field and stores its returning boolean for later
@@ -253,15 +255,15 @@ public class Chat {
                     if (character == '\t' && commandSuggestions != null) {
                         try {
                             inputText = "/" + commandSuggestions.get().getList().get(0).getText();
-                            var input = ((UITextInputAccessor)this);
+                            var input = ((UITextInputAccessor)(Object)this);
                             input.setDesiredCharIdx(inputText.length());
                             input.setIsDefaultText(false);
                             return true;
-                        } catch (Exception e) {}
+                        } catch (Exception ignored) {}
                     }
 
                     if (character == '\b' && Gdx.input.isKeyPressed(Keys.CONTROL_LEFT)) {
-                        var input = ((UITextInputAccessor)this);
+                        var input = ((UITextInputAccessor)(Object)this);
 
                         int pos = input.getDesiredCharIdx() - 1;
                         if (pos <= 0) return true;
@@ -308,20 +310,20 @@ public class Chat {
                 cursorCharacter = "|";
             }
 
-            String text = this.textInput.inputText.substring(0, cursorIndex) + cursorCharacter + this.textInput.inputText.substring(cursorIndex);
+            StringBuilder text = new StringBuilder(this.textInput.inputText.substring(0, cursorIndex) + cursorCharacter + this.textInput.inputText.substring(cursorIndex));
 
             if(this.textInput.inputText.startsWith("/")){
                 if(commandSuggestions != null && commandSuggestions.isDone()){
                     try {
                         for (Suggestion suggestion : commandSuggestions.get().getList()) {
-                            text += "\n" + suggestion.getText();
+                            text.append("\n").append(suggestion.getText());
                         }
                     } catch(Exception ignored) {
                         // No crashes while suggesting thx
                     }
                 }
 
-                text += "\n" + infoString;
+                text.append("\n").append(infoString);
             }
 
             FontRenderer.drawTextbox(UI.batch, uiViewport, "> " + text, -uiViewport.getWorldWidth() / 2.0F + 25, uiViewport.getWorldHeight() / 4.0F + lineHeight * 0.5F, uiViewport.getWorldWidth() / 3.0F);

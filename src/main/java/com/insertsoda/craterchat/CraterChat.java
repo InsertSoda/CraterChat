@@ -5,9 +5,7 @@ import com.insertsoda.craterchat.commands.PluginsCommand;
 import com.insertsoda.craterchat.impl.CommandContainerImpl;
 import com.insertsoda.craterchat.api.v1.Command;
 import com.insertsoda.craterchat.api.v1.CommandContainer;
-import com.insertsoda.craterchat.api.v1.CommandSource;
 import com.insertsoda.craterchat.api.v1.CraterChatPlugin;
-import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import dev.crmodders.cosmicquilt.api.entrypoint.ModInitializer;
 import org.jetbrains.annotations.ApiStatus;
 import org.quiltmc.loader.api.ModContainer;
@@ -50,18 +48,18 @@ public class CraterChat implements ModInitializer {
 							if(!registeredCommands.containsKey(alias) || Objects.equals(plugin.getProvider().metadata().id(), "craterchat")){
 								registeredCommands.put(alias, new CommandContainerImpl(command, plugin.getProvider(), alias));
 							} else {
-								LOGGER.warn(commandContainer.getMetadata().getSourceModContainer().metadata().name() + " attempted to register command alias /" + commandContainer.getMetadata().getName() + ", but it was already taken by another mod!");
+								LOGGER.warn("{} attempted to register command alias /{}, but it was already taken by another mod!", commandContainer.getMetadata().getSourceModContainer().metadata().name(), commandContainer.getMetadata().getName());
 							}
 						}
 					} else {
-						LOGGER.warn(commandContainer.getMetadata().getSourceModContainer().metadata().name() + " attempted to register command /" + commandContainer.getMetadata().getName() + ", but it was already taken by another mod!");
+						LOGGER.warn("{} attempted to register command /{}, but it was already taken by another mod!", commandContainer.getMetadata().getSourceModContainer().metadata().name(), commandContainer.getMetadata().getName());
 					}
 				} catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
 					throw new RuntimeException(e);
 				}
             }
 
-			LOGGER.info("Loaded the commands from " + plugin.getProvider().metadata().name());
+			LOGGER.info("Loaded the commands from {}", plugin.getProvider().metadata().name());
 
 		}
 
@@ -135,11 +133,11 @@ public class CraterChat implements ModInitializer {
 					if(!registeredCommands.containsKey(alias)){
 						registeredCommands.put(alias, new CommandContainerImpl(command, modContainer, alias));
 					} else {
-						LOGGER.warn(commandContainer.getMetadata().getSourceModContainer().metadata().name() + " attempted to register command alias /" + commandContainer.getMetadata().getName() + ", but it was already taken by another mod!");
+						LOGGER.warn("{} attempted to register command alias /{}, but it was already taken by another mod!", commandContainer.getMetadata().getSourceModContainer().metadata().name(), commandContainer.getMetadata().getName());
 					}
 				}
 			} else {
-				LOGGER.warn(commandContainer.getMetadata().getSourceModContainer().metadata().name() + " attempted to register command /" + commandContainer.getMetadata().getName() + ", but it was already taken by another mod!");
+				LOGGER.warn("{} attempted to register command /{}, but it was already taken by another mod!", commandContainer.getMetadata().getSourceModContainer().metadata().name(), commandContainer.getMetadata().getName());
 				allSuccessful = false;
 			}
 		}

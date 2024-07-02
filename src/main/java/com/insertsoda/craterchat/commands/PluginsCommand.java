@@ -11,7 +11,6 @@ import org.quiltmc.loader.api.QuiltLoader;
 import org.quiltmc.loader.api.entrypoint.EntrypointContainer;
 
 import java.util.ArrayList;
-import java.util.Objects;
 
 public class PluginsCommand implements Command {
 

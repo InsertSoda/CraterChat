@@ -4,6 +4,7 @@ import com.insertsoda.craterchat.CraterChat;
 import com.insertsoda.craterchat.api.v1.Command;
 import com.insertsoda.craterchat.api.v1.CommandSource;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
+import org.jetbrains.annotations.NotNull;
 
 public class ClearChatCommand implements Command {
     @Override
@@ -20,6 +21,7 @@ public class ClearChatCommand implements Command {
     }
 
     @Override
+    @NotNull
     public String getName() {
         return "clearchat";
     }

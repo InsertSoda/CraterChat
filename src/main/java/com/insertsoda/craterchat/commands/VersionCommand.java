@@ -10,25 +10,25 @@ import org.quiltmc.loader.api.ModContainer;
 import org.quiltmc.loader.api.QuiltLoader;
 
 public class VersionCommand implements Command {
+
+    @SuppressWarnings("OptionalGetWithoutIsPresent")
     @Override
     public void register(LiteralArgumentBuilder<CommandSource> literalArgumentBuilder) {
         literalArgumentBuilder.executes(context -> {
             ModContainer craterChatModContainer = QuiltLoader.getModContainer("craterchat").get();
             ModContainer cosmicReachModContainer = QuiltLoader.getModContainer("cosmicreach").get();
 
-            StringBuilder versionMessage = new StringBuilder();
+            String versionMessage = craterChatModContainer.metadata().name() + " v" + craterChatModContainer.metadata().version() +
+                    "\n" +
+                    "Running on Cosmic Reach v" + cosmicReachModContainer.metadata().version() +
+                    "\n" +
+                    "Homepage: " + craterChatModContainer.metadata().getContactInfo("homepage") +
+                    "\n" +
+                    "Source Code: " + craterChatModContainer.metadata().getContactInfo("sources") +
+                    "\n" +
+                    "API/Wiki: " + craterChatModContainer.metadata().getContactInfo("wiki");
 
-            versionMessage.append(craterChatModContainer.metadata().name()).append(" v").append(craterChatModContainer.metadata().version());
-            versionMessage.append("\n");
-            versionMessage.append("Running on Cosmic Reach v").append(cosmicReachModContainer.metadata().version());
-            versionMessage.append("\n");
-            versionMessage.append("Homepage: ").append(craterChatModContainer.metadata().getContactInfo("homepage"));
-            versionMessage.append("\n");
-            versionMessage.append("Source Code: ").append(craterChatModContainer.metadata().getContactInfo("sources"));
-            versionMessage.append("\n");
-            versionMessage.append("API/Wiki: ").append(craterChatModContainer.metadata().getContactInfo("wiki"));
-
-            CraterChat.Chat.sendMessage(versionMessage.toString());
+            CraterChat.Chat.sendMessage(versionMessage);
 
             return 1;
         });
