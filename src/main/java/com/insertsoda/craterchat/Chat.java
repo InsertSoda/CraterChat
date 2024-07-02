@@ -36,7 +36,10 @@ public class Chat {
     ParseResults<CommandSource> parse;
     CompletableFuture<Suggestions> commandSuggestions = null;
     String infoString = "";
-    LinkedList<ChatMessage> messages = new LinkedList<ChatMessage>();
+    LinkedList<ChatMessage> messages = new LinkedList<>();
+    LinkedList<String> pastMessages = new LinkedList<>();
+    int pastMessageIndex = 0;
+    boolean textInputEdited = false;
     UITextInput textInput = null;
     boolean isOpen = false;
     float lineHeight = 0.0F;
@@ -156,9 +159,48 @@ public class Chat {
                                 return true;
                             }
                             break;
+
+                            // Past message switching handling happens here
+                        case Keys.UP:
+                            if(!textInputEdited && !pastMessages.isEmpty()){
+                                pastMessageIndex++;
+                                if(pastMessageIndex >= pastMessages.size()){
+                                    pastMessageIndex = pastMessages.size() - 1;
+                                }
+
+                                this.inputText = pastMessages.get(pastMessageIndex);
+                                ((UITextInputAccessor)this).setDesiredCharIdx(this.inputText.length());
+                            }
+                            break;
+                        case Keys.DOWN:
+                            if(!textInputEdited && !pastMessages.isEmpty()){
+                                pastMessageIndex--;
+                                if(pastMessageIndex < -1){
+                                    pastMessageIndex = -1;
+                                }
+
+                                if(pastMessageIndex == -1){
+                                    this.inputText = this.getDefaultInputText();
+                                } else {
+                                    this.inputText = pastMessages.get(pastMessageIndex);
+                                }
+
+                                ((UITextInputAccessor)this).setDesiredCharIdx(this.inputText.length());
+                            }
+                            break;
                     }
 
                     return super.keyDown(keycode);
+                }
+
+                public void addCurrentInputToPastMessages(){
+                    if(pastMessages.isEmpty() || !pastMessages.getFirst().equals(this.inputText)){
+                        pastMessages.addFirst(this.inputText);
+
+                        if(pastMessages.size() > 15){
+                            pastMessages.removeLast();
+                        }
+                    }
                 }
 
                 @Override
@@ -192,13 +234,17 @@ public class Chat {
                                 // This will only happen if a command itself causes an exception
                                 CraterChat.Chat.sendMessage(new ChatMessage("[Unknown Exception]: " + e.getMessage()));
                             }
+                            this.addCurrentInputToPastMessages();
                         } else if(!this.inputText.isEmpty()) {
                             CraterChat.Chat.sendMessage(new ChatMessage("[Player]: " + this.inputText));
+                            this.addCurrentInputToPastMessages();
                         }
 
                         infoString = "";
                         commandSuggestions = null;
                         this.inputText = this.getDefaultInputText();
+                        pastMessageIndex = -1;
+                        textInputEdited = false;
                         CraterChat.Chat.toggle();
 
                         return false;
@@ -230,6 +276,8 @@ public class Chat {
                         inputText = inputText.substring(0, input.getDesiredCharIdx());
                         return true;
                     }
+
+                    textInputEdited = !(this.inputText.isEmpty() || this.inputText.equals("/"));
 
                     // Resume other operations I guess
                     return keyTypedBoolean;
