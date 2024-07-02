@@ -316,7 +316,13 @@ public class Chat {
                 if(commandSuggestions != null && commandSuggestions.isDone()){
                     try {
                         for (Suggestion suggestion : commandSuggestions.get().getList()) {
-                            text.append("\n").append(suggestion.getText());
+                            String suggestionText = suggestion.getText();
+
+                            if(!this.textInput.inputText.contains(" ") && CraterChat.isCommandRegistered(suggestionText)){
+                                text.append("\n").append(suggestionText).append(" ").append(CraterChat.getRegisteredCommands().get(suggestionText).getMetadata().getPossibleArguments());
+                            } else {
+                                text.append("\n").append(suggestionText);
+                            }
                         }
                     } catch(Exception ignored) {
                         // No crashes while suggesting thx
